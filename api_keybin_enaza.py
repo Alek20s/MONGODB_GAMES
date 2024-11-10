@@ -1,11 +1,9 @@
-
 import pymongo
 import json
 
 from fastapi import FastAPI
 
-#-------------------------------------------------------------
-# SWITH from loc to comany mongo
+# -- CONNECTION TO MONGO DB /   SWITCH from loc to comany mongo
 
 com_client = pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
 #loc_client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -13,27 +11,13 @@ db = com_client["marketplace"]
 #db = loc_client["marketplace"]
 
 col = db["keybin"]
-#------------------------------------------------------------
-# E N A Z A
-import pymongo
-import json
 
-com_client = pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
-#client = pymongo.MongoClient("mongodb://localhost:27017/")
-
-db = com_client["marketplace"]
-
-#db = client["mydatabase"]
-
-# Create a text index on the "name" field
-
+# ----  E N A Z A ------------------------------------------
 
 def search_enaza(word):
-    db.enaza_search.create_index([("name", "text")]) #enaza_search
+    db.enaza_search.create_index([("name", "text")]) # Create a text index on the "name" field
 
-    # Search for documents matching the word "war" and sort by the textScore
-    #word = "mars"
-    res_enaza = db.enaza_search.find(   # enaza_search
+    res_enaza = db.enaza_search.find(   
         {"$text": {"$search": word}},
         {"score": {"$meta": "textScore"}}
     ).sort(
@@ -48,27 +32,11 @@ def search_enaza(word):
 #       search_table.append(document)
 
     return api_table_enaza
-#--------------------------------------------------------
 
-
-word = "planet"
-i =  0
-for item  in  search_enaza(word):
-   i = i + 1
-   print (i)
-   print (item)
-
-
-
-
-#------------------------------------------------------------
-# Create a text index on the "name" field
-#db.keybin.create_index([("name", "text")])
-
-# Search for documents matching the word "war" and sort by the textScore
+#-   K E Y B I N -----------------------------------------------------------
 
 def search_keybin(word):    
-    db.keybin.create_index([("name", "text")])
+    db.keybin.create_index([("name", "text")]) #Create a text index on the "name" field
     
     res_prices = db.keybin.find(
         {"$text": {"$search": word}}, 
@@ -84,9 +52,9 @@ def search_keybin(word):
         search_table.append(document)
 
     return  api_table
-#-----------------------------------------------------------------------------
-search_result = search_keybin("war")
-#-----------------------------------------------------------------------------
+
+#----   T O T A L      S E A R C H  ----------------------------------------------------------------------------
+
 def  search_total(word):
     api_table_total = []
     for doc in search_keybin(word):
@@ -97,27 +65,16 @@ def  search_total(word):
 
     return  api_table_total
 
-
-#-----------------------------------------------
-
-# printing search result:
-#i =  0 
-#for item  in search_result:
-#   i = i + 1 
-#   print (i)
-#   print (item)
-
-print ("#-------------------------")
+# ---    A P I  on name --------------------------------------------
 
 app = FastAPI()
 
-# Define an async function that accepts one argument
 @app.get("/search_name/{word}")
 async def search_game(word: str):
     result = search_total(word)
     return result
 
-#  SEARCH USING ID
+# ----  SEARCH ON  ID --------------
 
 def search_id(id):
     query = {"_id" : id}
@@ -130,13 +87,17 @@ def search_id(id):
 name_id = 10000008994
 print (search_id(name_id))
 
+# ---- A P I   on id ----------------
 
 @app.get("/search_id/{id}")
 async def search_game_id(id: int):
     result = search_id(id)
     return result
 
-# RUN
+#---------------------------------------------------------------------y
+
+
+# --- HOW  TO  RUN  THIS FILE ----------------
 
 # wget -qO- http://127.0.0.1:8000/search_name/star
 #  wget -qO- http://127.0.0.1:8000/search_name/Suns | jq -c '.[]'
