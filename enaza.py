@@ -140,7 +140,7 @@ for document in data:
     enaza_data.append(document)
 #    print(document)
 
-print (enaza_data[2])
+print ("to be sure it is downloaded, it's shown its product_id:   ",enaza_data[2]["product_id"])
 
 end_time = time.time()
 execution_time = end_time - start_time
