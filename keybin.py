@@ -2,18 +2,16 @@ from datetime import datetime
 import pymongo
 import requests
 
-from dotenv import load_dotenv #1
-import os  #2
+from dotenv import load_dotenv 
+import os  
 
-load_dotenv() #3  # Load environment variables from .env
-
+load_dotenv() # Load environment variables from .env
 
 print(" S T A R T" )
-#-------------------------------------------------------------------------------------------
-mongo_uri = os.getenv("MONGO_URI")  # 4  # Get the MongoDB URI from the .env file
-com_client = pymongo.MongoClient(mongo_uri)  #5
+#--------------------------------------------------
+mongo_uri = os.getenv("MONGO_URI") # Get the MongoDB URI from the .env file
+com_client = pymongo.MongoClient(mongo_uri) 
 
-#com_client = pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
 #myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 
 mydb = com_client["marketplace"]
@@ -22,19 +20,13 @@ mycol = mydb["keybin"]
 token = os.getenv("TOKEN")
 headers = {"PERSONAL-TOKEN":token}
 
-#TOKEN = 4aNI~ZCqv17i+6!)bBj=
-#headers = {"PERSONAL-TOKEN":"4aNI~ZCqv17i+6!)bBj="}
-
 keybin_proxy =  os.getenv("KEYBIN_PROXY") 
 proxies = {"http": keybin_proxy, "https": keybin_proxy }
-
-#proxies = {"http": "http://opl:eo1muuShifee5yeGhaep@back-hz-2.opl.infrapu.sh:3128",
-#          "https": "http://opl:eo1muuShifee5yeGhaep@back-hz-2.opl.infrapu.sh:3128", }
-#-------------------------------------------------------------------------------------------
 
 # Fetch total number of products
 response = requests.get("https://api.keybin.net/v1/products?embed_listings=true", headers = headers, proxies=proxies)
 print(response.status_code)
+
 #print(response.text)
 
 total = response.json()["total"]
