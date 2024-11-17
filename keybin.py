@@ -2,19 +2,34 @@ from datetime import datetime
 import pymongo
 import requests
 
+from dotenv import load_dotenv #1
+import os  #2
+
+load_dotenv() #3  # Load environment variables from .env
+
+
 print(" S T A R T" )
 #-------------------------------------------------------------------------------------------
+mongo_uri = os.getenv("MONGO_URI")  # 4  # Get the MongoDB URI from the .env file
+com_client = pymongo.MongoClient(mongo_uri)  #5
 
+#com_client = pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
 #myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-myclient = pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
 
-mydb = myclient["marketplace"]
+mydb = com_client["marketplace"]
 mycol = mydb["keybin"]
 
-headers = {"PERSONAL-TOKEN":"4aNI~ZCqv17i+6!)bBj="}
+token = os.getenv("TOKEN")
+headers = {"PERSONAL-TOKEN":token}
 
-proxies = {"http": "http://opl:eo1muuShifee5yeGhaep@back-hz-2.opl.infrapu.sh:3128",
-           "https": "http://opl:eo1muuShifee5yeGhaep@back-hz-2.opl.infrapu.sh:3128", }
+#TOKEN = 4aNI~ZCqv17i+6!)bBj=
+#headers = {"PERSONAL-TOKEN":"4aNI~ZCqv17i+6!)bBj="}
+
+keybin_proxy =  os.getenv("KEYBIN_PROXY") 
+proxies = {"http": keybin_proxy, "https": keybin_proxy }
+
+#proxies = {"http": "http://opl:eo1muuShifee5yeGhaep@back-hz-2.opl.infrapu.sh:3128",
+#          "https": "http://opl:eo1muuShifee5yeGhaep@back-hz-2.opl.infrapu.sh:3128", }
 #-------------------------------------------------------------------------------------------
 
 # Fetch total number of products
@@ -25,7 +40,7 @@ print(response.status_code)
 total = response.json()["total"]
 pages = (total + 49) // 50 # Calculate number of pages needed
 
-for page in range(1, 33 ):
+for page in range(1, 26 ):
   print(f"Page: {page}")
   try: # Fetch products for the current page
     response = requests.get(f"https://api.keybin.net/v1/products?embed_listings=true&take=50&page={page}", headers=headers, proxies=proxies)
@@ -68,7 +83,7 @@ for page in range(1, 33 ):
   except Exception as e:
     pass
 
-myclient.close()
+com_client.close()
 
 print ("E N D")
 
