@@ -1,11 +1,16 @@
 import pymongo
 import json
-
+from dotenv import load_dotenv #1
+import os  
 from fastapi import FastAPI
 
 # -- CONNECTION TO MONGO DB /   SWITCH from loc to comany mongo
+load_dotenv()  # Load environment variables from .env
 
-com_client = pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
+mongo_uri = os.getenv("MONGO_URI")  # Get the MongoDB URI from the .env file
+com_client = pymongo.MongoClient(mongo_uri) # Connect to MongoDB
+#com_client = pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
+
 #loc_client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = com_client["marketplace"]
 #db = loc_client["marketplace"]
