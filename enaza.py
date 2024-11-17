@@ -7,11 +7,22 @@ import subprocess
 import os
 import time
 
+from dotenv import load_dotenv #1
+import os  #2
+load_dotenv() #3 # Load environment variables from .env
+
 start_time = time.time()
+
+#-----------------------------------------------------------------------------------------
+mongo_uri = os.getenv("MONGO_URI")  # 4  # Get the MongoDB URI from the .env file
+
+com_client = pymongo.MongoClient(mongo_uri)  #5 # Connect to MongoDB
 
 # S W I T C H local to company mongo
 
-com_client=pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
+#com_client=pymongo.MongoClient("mongodb://marketplace:rEUlay_7Q9Q2hPjWPadxHMsD@mongo.opl.infrapu.sh:27017/?authSource=marketplace")
+#--------------------------------------------------------------------------------------------------------------------------------
+
 #loc_client = pymongo.MongoClient("mongodb://localhost:27017/")
 #db=loc_client["marketplace"]
 db=com_client["marketplace"]
@@ -20,11 +31,15 @@ db=com_client["marketplace"]
 new_collection=db["new_enaza"]
 
 #enaza_sales = db["new_enaza_sales"]
-#--------------------------------------------
 
-passphrase='!K9-pE4]"2O|+1v?;lZ1h18!5h?9X31!'
-partner_code="OnlineSup"
+#------------  DOTENV --------------------
+enaza_passphrase =  os.getenv('ENAZA_PASSPHRASE')
+passphrase= enaza_passphrase
+#passphrase='!K9-pE4]"2O|+1v?;lZ1h18!5h?9X31!'
 
+enaza_code = os.getenv("ENAZA_CODE")
+partner_code = enaza_code
+#partner_code="OnlineSup"
 #--------------------------------------------
 
 def download_file(url,filename):
@@ -149,4 +164,4 @@ print(f"Execution time: {execution_time} seconds")
 #  I made changes and commited from a server
 # second change  2
 # git init, git add enaza.py, (make changes), git commit -m "...", git push origin main
-# hide variables
+
