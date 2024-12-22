@@ -15,6 +15,8 @@ load_dotenv() #3 # Load environment variables from .env
 start_time = time.time()
 
 #-----------------------------------------------------------
+
+# DELETE 
 mongo_uri = os.getenv("MONGO_URI")  # Get the MongoDB URI from the .env file
 
 com_client = pymongo.MongoClient(mongo_uri)  # Connect to MongoDB
