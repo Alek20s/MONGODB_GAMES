@@ -164,4 +164,4 @@ print(f"Execution time: {execution_time} seconds")
 #  I made changes and commited from a server
 # second change  2
 # git init, git add enaza.py, (make changes), git commit -m "...", git push origin main
-
+# reminding git
