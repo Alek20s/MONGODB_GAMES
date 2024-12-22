@@ -70,6 +70,8 @@ def enaza_run():
     encrypted_filename = f'{enaza_code}_{inst}.json.gz.enc'
     decrypted_filename = f'{enaza_code}_{inst}.json.gz'
     json_filename = f'{enaza_code}_{inst}.json'
+    if os.path.exists(json_filename):
+        os.remove(json_filename)  # Automatically overwrite by removing the file
 
     # File processing workflow
     download_file(url, encrypted_filename)
