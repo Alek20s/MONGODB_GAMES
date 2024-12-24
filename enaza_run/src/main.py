@@ -3,7 +3,8 @@ import time  # Import the time module for sleep functionality
 from dotenv import load_dotenv
 from enaza import enaza_run
 
-load_dotenv()
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', 'venv', '.env')
+load_dotenv(dotenv_path)
 
 def main():
     while True:  # Infinite loop to repeatedly execute the script
